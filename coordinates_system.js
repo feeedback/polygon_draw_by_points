@@ -9,12 +9,11 @@ const drawCoordinatesSystem = (
   x_axis_distance_grid_lines = 0,
   y_axis_distance_grid_lines = 0,
   width = 200,
-  height = 200,
-  isLabel = false
+  height = 200
+  // isLabel = false
 ) => {
-  // const x_axis_starting_point = { number: 1, suffix: '\u03a0' };
-  const x_axis_starting_point = { number: 1, suffix: '' };
-  const y_axis_starting_point = { number: 1, suffix: '' };
+  // const x_axis_starting_point = { number: 1, suffix: '' };
+  // const y_axis_starting_point = { number: 1, suffix: '' };
 
   const canvas = canvasRaw || nodeCanvas.createCanvas(width, height, 'svg');
 
@@ -32,7 +31,7 @@ const drawCoordinatesSystem = (
     ctx.beginPath();
 
     ctx.lineWidth = 1;
-    ctx.strokeStyle = x === x_axis_distance_grid_lines ? '#000000AA' : '#e9e9e9';
+    ctx.strokeStyle = x === x_axis_distance_grid_lines ? '#00000099' : '#e9e9e9';
 
     ctx.moveTo(startDrawPoint.x, startDrawPoint.y + gridSize * x);
     ctx.lineTo(startDrawPoint.x + canvas_width, startDrawPoint.y + gridSize * x);
@@ -45,7 +44,7 @@ const drawCoordinatesSystem = (
     ctx.beginPath();
 
     ctx.lineWidth = 1;
-    ctx.strokeStyle = y === y_axis_distance_grid_lines ? '#000000AA' : '#e9e9e9';
+    ctx.strokeStyle = y === y_axis_distance_grid_lines ? '#00000099' : '#e9e9e9';
 
     ctx.moveTo(startDrawPoint.x + gridSize * y, startDrawPoint.y);
     ctx.lineTo(startDrawPoint.x + gridSize * y, startDrawPoint.y + canvas_height);
