@@ -1,5 +1,4 @@
-import canvasLib from 'canvas';
-// import { randomInt } from 'crypto';
+import nodeCanvas from 'canvas';
 import drawCoordinatesSystem from './coordinates_system.js';
 
 function drawPoint(ctx, x, y, label, color = '#000', size = 5) {
@@ -50,7 +49,7 @@ const getMinXY = (points) => {
   return { min, max };
 };
 
-const canvasCreate = (width, height, type) => canvasLib.createCanvas(width, height, type);
+const canvasCreate = (width, height, type) => nodeCanvas.createCanvas(width, height, type);
 
 const drawFigure = (ctx, ...points) => {
   ctx.beginPath();
@@ -107,7 +106,7 @@ const canvasInit = (points, typeFileOutput = 'svg') => {
     typeFileOutput
   );
   // drawCoordinatesSystem(canvas, zoomRatio, zoomedPoints[0].x / zoomRatio, zoomedPoints[0].y / zoomRatio);
-  drawCoordinatesSystem(canvas, zoomRatio, 0, 0);
+  drawCoordinatesSystem(canvas, zoomRatio, startXY);
   // drawCoordinatesSystem(canvas, 2, 0, 0);
   const ctx = canvas.getContext('2d');
   // чтобы рисовать с нижнего левого угла
