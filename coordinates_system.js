@@ -18,7 +18,7 @@ const drawCoordinatesSystem = (
   const canvas = canvasRaw || nodeCanvas.createCanvas(width, height, 'svg');
 
   const ctx = canvas.getContext('2d');
-  ctx.resetTransform();
+  // ctx.resetTransform();
 
   const canvas_width = canvas.width;
   const canvas_height = canvas.height;
@@ -31,7 +31,7 @@ const drawCoordinatesSystem = (
     ctx.beginPath();
 
     ctx.lineWidth = 1;
-    ctx.strokeStyle = x === x_axis_distance_grid_lines ? '#00000099' : '#e9e9e9';
+    ctx.strokeStyle = x === x_axis_distance_grid_lines ? '#99999977' : '#e9e9e9bb';
 
     ctx.moveTo(startDrawPoint.x, startDrawPoint.y + gridSize * x);
     ctx.lineTo(startDrawPoint.x + canvas_width, startDrawPoint.y + gridSize * x);
@@ -44,7 +44,7 @@ const drawCoordinatesSystem = (
     ctx.beginPath();
 
     ctx.lineWidth = 1;
-    ctx.strokeStyle = y === y_axis_distance_grid_lines ? '#00000099' : '#e9e9e9';
+    ctx.strokeStyle = y === y_axis_distance_grid_lines ? '#99999977' : '#e9e9e9bb';
 
     ctx.moveTo(startDrawPoint.x + gridSize * y, startDrawPoint.y);
     ctx.lineTo(startDrawPoint.x + gridSize * y, startDrawPoint.y + canvas_height);
@@ -58,7 +58,7 @@ const drawCoordinatesSystem = (
   //   startDrawPoint.x + x_axis_distance_grid_lines * gridSize
   // );
 
-  ctx.resetTransform();
+  // ctx.resetTransform();
   return canvas;
 };
 

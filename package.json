@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "coordinates_system": "node coordinates_system.js"
+    "start": "node index.js"
   },
   "author": "Alexander Rzhanitsyn",
   "engines": {

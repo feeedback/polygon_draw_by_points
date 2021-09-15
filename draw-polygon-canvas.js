@@ -1,38 +1,42 @@
+/* eslint-disable no-param-reassign */
 import nodeCanvas from 'canvas';
 import drawCoordinatesSystem from './coordinates_system.js';
 
-function drawPoint(ctx, x, y, label, color = '#000', size = 5) {
+function drawPoint(ctx, x, y, label, color = '#000', pointSize = 5, textSizeChar = 14, textSizeCoord = 10) {
   const pointX = Math.round(x);
   const pointY = Math.round(y);
 
   ctx.beginPath();
   ctx.fillStyle = color;
-  ctx.arc(pointX, pointY, size, 0 * Math.PI, 2 * Math.PI);
+  ctx.arc(pointX, pointY, pointSize, 0 * Math.PI, 2 * Math.PI);
   ctx.fill();
 
   if (label) {
     // ctx.setTransform(1, 0, 0, 1, 0, 0);
-    // ctx.resetTransform();
+    ctx.resetTransform();
     // ctx.translate(0, -ctx.canvas.height);
     // ctx.scale(-1, 0);
     const textX = pointX;
-    const textY = Math.round(pointY - size - 3);
+    const textY = ctx.canvas.height - Math.round(pointY - pointSize - 3);
 
     const labelChar = label.slice(0, 1);
     const restLabel = label.slice(1);
-    ctx.font = 'bold 16px Arial';
-    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+    // ctx.textBaseline = 'middle';
+    ctx.textBaseline = 'bottom';
+    ctx.font = `bold ${textSizeChar}px Arial`;
+    // ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
     ctx.textAlign = 'right';
-    ctx.fillText(labelChar, textX, textY);
+    ctx.fillText(labelChar, textX, textY - textSizeChar / 2);
     // const widthChar = ctx.measureText(labelChar).width;
-
-    ctx.font = '14px Arial';
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
-    ctx.textAlign = 'left';
-    ctx.fillText(restLabel, textX, textY);
-
-    // ctx.translate(0, ctx.canvas.height);
-    // ctx.scale(1, -1);
+    if (textSizeCoord >= 4) {
+      ctx.font = `${textSizeCoord}px Arial`;
+      ctx.fillStyle = `rgba(9, 9, 9, 0.7+${(Math.sqrt(textSizeCoord - 4) * 9) / 100})`;
+      ctx.textAlign = 'left';
+      ctx.fillText(restLabel, textX, textY - (textSizeChar * 1.05 - textSizeCoord - 1) - textSizeCoord / 2);
+    }
+    ctx.translate(0, ctx.canvas.height);
+    ctx.scale(1, -1);
   }
 }
 
@@ -65,9 +69,9 @@ const drawFigure = (ctx, ...points) => {
   ctx.lineWidth = 1;
   // ctx.strokeStyle = "rgba(0, 0, 0, 0.7)";
   // ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
-  ctx.strokeStyle = 'rgb(0, 30, 0)';
+  ctx.strokeStyle = 'rgb(0, 50, 0)';
   ctx.stroke();
-  ctx.fillStyle = 'rgba(0, 255,0, 0.3)';
+  ctx.fillStyle = 'rgba(0, 255, 0, 0.25)';
   ctx.fill();
 };
 
@@ -76,7 +80,13 @@ const generateLabelsToVerticles = (points) => {
   const labelinit = 'A'.charCodeAt(); // const nameInit = 'a'.charCodeAt()
 
   for (let index = 0; index < points.length; index++) {
-    labels[index] = `${String.fromCharCode(labelinit + index)} (${points[index].x}, ${points[index].y})`;
+    let label = String.fromCharCode(labelinit + (index % 26));
+
+    if (index >= 26) {
+      label += '"'.repeat(Math.floor(index / 26)); // '`"'´'
+    }
+    // eslint-disable-next-line no-irregular-whitespace
+    labels[index] = `${label} (${points[index].x}, ${points[index].y})`;
   }
 
   return labels;
@@ -105,17 +115,17 @@ const canvasInit = (points, typeFileOutput = 'svg') => {
     getZoomed(minAndMax.max).y + startXY.y - 16 / 2,
     typeFileOutput
   );
-  // drawCoordinatesSystem(canvas, zoomRatio, zoomedPoints[0].x / zoomRatio, zoomedPoints[0].y / zoomRatio);
-  drawCoordinatesSystem(canvas, zoomRatio, startXY);
-  // drawCoordinatesSystem(canvas, 2, 0, 0);
   const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   // чтобы рисовать с нижнего левого угла
   // но этим способом текст трансформируется
-  // ctx.translate(0, canvas.height);
-  // ctx.scale(1, -1);
+  ctx.translate(0, canvas.height);
+  ctx.scale(1, -1);
 
-  // ctx.fillStyle = 'white';
-  // ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawCoordinatesSystem(canvas, zoomRatio, startXY);
+
   return { canvas, ctx, zoomedPoints, labels };
 };
 
@@ -126,7 +136,7 @@ const canvasInit = (points, typeFileOutput = 'svg') => {
  * @param { 'svg'|'png'|'jpeg'|'jpegLow' } [typeFileOutput='svg']
  * @return {Promise<undefined>}
  */
-function drawPolygonOnCanvas(figuresRaw, typeFileOutput) {
+function drawPolygonOnCanvas(figuresRaw, typeFileOutput, pointSize, textSizeChar, textSizeCoord) {
   let figures = figuresRaw;
   if (!Array.isArray(figuresRaw[0])) {
     figures = [figuresRaw];
@@ -136,14 +146,26 @@ function drawPolygonOnCanvas(figuresRaw, typeFileOutput) {
   for (let figureIndex = 0; figureIndex < figures.length; figureIndex++) {
     const points = figures[figureIndex];
     const { canvas, ctx, zoomedPoints, labels } = canvasInit(points, typeFileOutput);
-
+    if (points.length >= 50) {
+      [pointSize, textSizeChar, textSizeCoord] = [1, 8, 0];
+    } else if (points.length >= 26) {
+      [pointSize, textSizeChar, textSizeCoord] = [1.5, 10, 6];
+    } else if (points.length >= 16) {
+      [pointSize, textSizeChar, textSizeCoord] = [1.5, 11, 8];
+    } else if (points.length >= 10) {
+      [pointSize, textSizeChar, textSizeCoord] = [2, 12, 8];
+    } else if (points.length >= 5) {
+      [pointSize, textSizeChar, textSizeCoord] = [3, 14, 12];
+    } else {
+      [pointSize, textSizeChar, textSizeCoord] = [3, 16, 12];
+    }
     drawFigure(ctx, ...zoomedPoints);
 
     for (let index = 0; index < zoomedPoints.length; index++) {
       const point = zoomedPoints[index];
       const label = labels[index];
 
-      drawPoint(ctx, point.x, point.y, label, 'black', 3);
+      drawPoint(ctx, point.x, point.y, label, 'black', pointSize, textSizeChar, textSizeCoord);
     }
     finishedCanvasImages.push({ figureIndex, canvas });
   }
