@@ -2,6 +2,8 @@ import { randomInt } from 'crypto';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
+export const toPrecision2 = (num) => Math.floor(num * 10) / 10;
+
 export const nowTime = (now = new Date()) => now.toLocaleTimeString('ru-Ru');
 
 export const getDirname = (url) => path.dirname(fileURLToPath(url)); // import.meta.url

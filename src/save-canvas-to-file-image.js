@@ -10,10 +10,11 @@ import { getDirname, nowTime } from './utils/utils.js';
  * @param { number } index
  * @param { Canvas } canvas
  * @param { 'svg'|'png'|'jpg'|'jpeg'|'jpegLow' } [typeFileOutput='svg']
+ * @param { string } [filepath='./img/']
  *
  * @return { Promise<undefined> }
  */
-const saveCanvasToFileImage = (index, canvas, typeFileOutput = 'svg') => {
+const saveCanvasToFileImage = (index, canvas, typeFileOutput = 'svg', filepath) => {
   if (typeFileOutput === 'svg' && canvas.type !== 'svg') {
     throw new Error('Canvas was created with the type is NOT "SVG". But typeFileOutput - "SVG"');
   } else if (typeFileOutput !== 'svg' && canvas.type !== 'image') {
@@ -37,11 +38,12 @@ const saveCanvasToFileImage = (index, canvas, typeFileOutput = 'svg') => {
   mapTypeToSettnigs.jpg = mapTypeToSettnigs.jpeg;
   const typeSettings = mapTypeToSettnigs[typeFileOutput];
 
-  const pathImg = path.resolve(
-    getDirname(import.meta.url),
-    `../img/figure_${index}_${nowTime().replace(/:/g, '_')}.${typeSettings.ext}`
-  );
-
+  let outputpath = filepath;
+  if (filepath.endsWith('/')) {
+    outputpath += `figure_${index}_${nowTime().replace(/:/g, '_')}.${typeSettings.ext}`;
+  }
+  const pathImg = path.resolve(getDirname(import.meta.url), '..', outputpath);
+  console.log(pathImg);
   if (typeFileOutput === 'svg') {
     const svgString = canvas.toBuffer('image/svg+xml').toString('utf8');
     const optimizedSvgString = svgoOptimize(svgString, {}).data;

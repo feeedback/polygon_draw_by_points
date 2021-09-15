@@ -4,16 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node ./src/index.js"
   },
   "author": "Alexander Rzhanitsyn",
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "type": "module",
-  "bin": {},
+  "bin": {
+    "draw": "bin/index.js"
+  },
   "dependencies": {
     "canvas": "^2.8.0",
+    "commander": "^8.2.0",
     "svgo": "^2.6.0"
   }
 }

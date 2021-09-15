@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import drawCoordinatesSystem from './draw_coordinates_system.js';
-import { getDist, getMinXYFromPoints } from './utils/utils.js';
+import { getDist, getMinXYFromPoints, toPrecision2 } from './utils/utils.js';
 import {
   nodeCanvasCreate,
   createFnZoom,
@@ -95,7 +95,7 @@ function drawPolygonOnCanvas(figuresRaw, typeFileOutput, pointSize, textSizeChar
   const finishedCanvasImages = [];
 
   for (let figureIndex = 0; figureIndex < figures.length; figureIndex++) {
-    const points = figures[figureIndex];
+    const points = figures[figureIndex].map(({ x, y }) => ({ x: toPrecision2(x), y: toPrecision2(y) }));
     const { canvas, ctx, zoomedPoints, labels } = canvasInit(points, typeFileOutput);
 
     drawFigure(ctx, ...zoomedPoints);
