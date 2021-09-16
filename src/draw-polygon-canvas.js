@@ -24,7 +24,7 @@ const canvasInit = (points, typeFileOutput = 'svg') => {
   const getZoomed = createFnZoom(shiftXY, zoomRatio);
   const zoomedPoints = points.map(getZoomed);
 
-  const width = getZoomed(minAndMax.max).x + startXY.x + (points.length < 6 ? 4 : 3) * maxLengthLabels;
+  const width = getZoomed(minAndMax.max).x + startXY.x + (points.length < 6 ? 4.7 : 3.5) * maxLengthLabels;
   const height = getZoomed(minAndMax.max).y + startXY.y + 6;
 
   const canvas = nodeCanvasCreate(width, height, typeFileOutput);
@@ -96,6 +96,12 @@ function drawPolygonOnCanvas(figuresRaw, typeFileOutput, pointSize, textSizeChar
 
   for (let figureIndex = 0; figureIndex < figures.length; figureIndex++) {
     const points = figures[figureIndex].map(({ x, y }) => ({ x: toPrecision2(x), y: toPrecision2(y) }));
+
+    if (points.length === 0) {
+      console.log(`ERROR: Not found points in figureIndex - ${figureIndex}`);
+      return finishedCanvasImages;
+    }
+
     const { canvas, ctx, zoomedPoints, labels } = canvasInit(points, typeFileOutput);
 
     drawFigure(ctx, ...zoomedPoints);

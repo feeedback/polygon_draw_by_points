@@ -4,8 +4,8 @@ import saveCanvasToFileImage from './save-canvas-to-file-image.js';
 
 const drawPolygonAndSaveToFile = (points, format, filepath) =>
   Promise.allSettled(
-    drawPolygonOnCanvas(points, format).map(({ figureIndex, canvas }) =>
-      saveCanvasToFileImage(figureIndex, canvas, format, filepath)
+    drawPolygonOnCanvas(points, format).map(({ canvas, figureIndex }) =>
+      saveCanvasToFileImage(canvas, figureIndex, format, filepath)
     )
   );
 
