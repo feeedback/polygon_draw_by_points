@@ -24,7 +24,8 @@ await drawPolygonAndSaveToFile([[{x:0,y:5},{x:5,y:0},{x:6,y:6}], {x:5,y:5, x:20,
 // (many polygons) './figure_0_[hh:mm:ss].png', './figure_1_[hh:mm:ss].png'
 ```
 
-##### from console:
+##### from console: 
+`./bin/index.js` or `draw_polygon` after `npm link`
 
 ```Bash
 draw_polygon -- '1,0 14,7 3,2'
