@@ -12,7 +12,7 @@
   },
   "type": "module",
   "bin": {
-    "draw": "bin/index.js"
+    "draw_polygon": "bin/index.js"
   },
   "dependencies": {
     "canvas": "^2.8.0",
